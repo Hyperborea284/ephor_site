@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-1zg81-q97l9-8%+99*3cphud#7al#i7#xvbe%nwl1=%nj6@j=+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', '179.233.31.174', 'ephor.com.br']
 
 
 # Application definition
@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'pix',
 ]
 
 MIDDLEWARE = [
@@ -127,3 +128,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+PIX_CHAVE = 'chave_pix_aqui'
+PIX_CHAVE_PRIVADA = 'chave_privada_pix_aqui'
+PIX_URL_BASE = 'https://api-pix.gerencianet.com.br'
