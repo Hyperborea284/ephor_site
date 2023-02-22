@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    command: gunicorn -c gunicorn.conf production.wsgi:application
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+  db:
+    image: mysql:latest # utiliza a imagem do MySQL
+    volumes:
+      - mysql_data:/var/lib/mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: mysecretpassword # define a senha de root do MySQL
+      MYSQL_DATABASE: mydatabasename # define o nome do banco de dados a ser criado
+      MYSQL_USER: mydatabaseuser # define o nome do usuário do banco de dados
+      MYSQL_PASSWORD: mydatabasepassword # define a senha do usuário do banco de dados
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    ports:
+      - "8080:80"
+      - "8081:443"
+    depends_on:
+      - web
+
+volumes:
+  mysql_data:
