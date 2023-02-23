@@ -1,0 +1,270 @@
+{% load static %}
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+
+			{% if blog_post.image %}
+			<div class="col-md-12 mb-4 mx-auto0">
+				<img src='{{ blog_post.image.url }}' class='card-img-top'/>
+				<p></p>
+				<p></p>
+			{% endif %}
+
+			<div class='col-md-12 mb-4 mx-auto0'>
+				<div class='card {% if not blog_post.publish_date %} bg-grey text-light {% endif %} bg-dark text-light'>
+					<div class='card-body'>
+						<h2 class='card-title'>{{ blog_post.title }}</h2>
+						<h3 class='card-text'>
+							<small class="text-muted">{{ blog_post.publish_date }}</small>
+							{% if truncate %}
+								{{ blog_post.content|linebreaks|truncatewords:30 }}
+							{% else%}
+								{{ blog_post.content|linebreaks }}
+							{% endif %}
+						</h3>
+			
+						{% if not detail %}
+							{% if not blog_post.publish_date %} Draft {% endif %}
+							<a href="{{ blog_post.get_absolute_url }}">View</a>
+						{% endif %}
+					<p></p>
+					<p></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card-body'>
+					{% if blog_post.wordcloud %}
+					<div class="col-md-10">
+						<img src='{{ blog_post.wordcloud.url }}' class='card-img-top'/>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card-body'>
+					{% if blog_post.barplot %}
+					<div class="col-md-10">
+						<img src='{{ blog_post.barplot.url }}' class='card-img-top'/>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card-body'>
+					{% if blog_post.reinert %}
+					<div class="col-md-10">
+						<img src='{{ blog_post.reinert.url }}' class='card-img-top'/>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card-body'>
+					{% if blog_post.sents_1 %}
+					<div class="col-md-10">
+						<img src='{{ blog_post.sents_1.url }}' class='card-img-top'/>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card bg-grey text-light bg-dark text-light'>
+					<div class='card-body'>
+						{% if blog_post.ent_list %}
+						<h2 class='card-text'>
+							<h3 class="text-muted">Entidades no texto</h3>
+							{{ blog_post.ent_list|linebreaks }}
+						</h2>
+						{% endif %}
+					<p></p>
+					<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card bg-grey text-light bg-dark text-light'>
+					<div class='card-body'>
+					{% if blog_post.summ_bert %}
+					<h2 class='card-text'>
+						<h3 class="text-muted">Resumo de {{ blog_post.title  }}</h3>
+						{{ blog_post.summ_bert|linebreaks }}
+					</h2>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card bg-grey text-light bg-dark text-light'>
+					<div class='card-body'>
+					{% if blog_post.alt_freq_bai_ord %}
+					<h2 class='card-text'>
+						<h3 class="text-muted">Análise Prototípica - Núcleo Central - Alta frequencia e baixa ordem</h3>
+						{{ blog_post.alt_freq_bai_ord|linebreaks }}
+					</h2>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card bg-grey text-light bg-dark text-light'>
+					<div class='card-body'>
+					{% if blog_post.alt_freq_alt_ord %}
+					<h2 class='card-text'>
+						<h3 class="text-muted">Análise Prototípica - Zona Periférica - 1 - Alta frequencia e alta ordem</h3>
+						{{ blog_post.alt_freq_alt_ord|linebreaks }}
+					</h2>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card bg-grey text-light bg-dark text-light'>
+					<div class='card-body'>
+					{% if blog_post.bai_freq_bai_ord %}
+					<h2 class='card-text'>
+						<h3 class="text-muted">Análise Prototípica - Zona Periférica - 2 - Baixa frequencia e baixa ordem</h3>
+						{{ blog_post.bai_freq_bai_ord|linebreaks }}
+					</h2>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card bg-grey text-light bg-dark text-light'>
+					<div class='card-body'>
+					{% if blog_post.bai_freq_alt_ord %}
+					<h2 class='card-text'>
+						<h3 class="text-muted">Análise Prototípica - Zona Periférica - 3 - Baixa frequencia e alta ordem</h3>
+						{{ blog_post.bai_freq_alt_ord|linebreaks }}
+					</h2>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card bg-grey text-light bg-dark text-light'>
+					<div class='card-body'>
+					{% if blog_post.output_bi %}
+					<h2 class='card-text'>
+						<h3 class="text-muted">Bigramas de {{ blog_post.title  }}</h3>
+					{{ blog_post.output_bi|linebreaks }}
+					</h2>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card bg-grey text-light bg-dark text-light'>
+					<div class='card-body'>
+					{% if blog_post.output_tri %}
+					<h3 class='card-text'>
+						<h2 class="text-muted">Trigramas de {{ blog_post.title  }}</h2>
+						{{ blog_post.output_tri|linebreaks }}
+					</h3>
+					{% endif %}
+				<p></p>
+				<p></p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+

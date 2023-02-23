@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="fh5co-section">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 mb-4 mx-auto0">
+				<div class='card-body'>
+					{% include 'blog/list-inline.html' with blog_post=object %}
+
+					{% if request.user.is_authenticated %}
+
+						<a href="{{ object.get_edit_url }}" class="btn btn-primary">Edit</a>
+						<a href="{{ object.get_delete_url }}" class="btn btn-primary">Delete</a>
+
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{% endblock %}

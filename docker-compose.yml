@@ -11,14 +11,12 @@ services:
     depends_on:
       - db
   db:
-    image: mysql:latest # utiliza a imagem do MySQL
-    volumes:
-      - mysql_data:/var/lib/mysql/
+    image: mysql:latest
     environment:
-      MYSQL_ROOT_PASSWORD: mysecretpassword # define a senha de root do MySQL
-      MYSQL_DATABASE: mydatabasename # define o nome do banco de dados a ser criado
-      MYSQL_USER: mydatabaseuser # define o nome do usuário do banco de dados
-      MYSQL_PASSWORD: mydatabasepassword # define a senha do usuário do banco de dados
+      MYSQL_ROOT_PASSWORD: mysecretpassword
+      MYSQL_DATABASE: mydatabasename
+      MYSQL_USER: mydatabaseuser
+      MYSQL_PASSWORD: mydatabasepassword
   nginx:
     image: nginx:latest
     volumes:
