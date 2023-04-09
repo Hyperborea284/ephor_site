@@ -6,9 +6,12 @@ from polyglot.detect import Detector
 import subprocess
 import os
 import re
+import pandas as pd
 import string
 import nltk
 from nltk.tokenize import word_tokenize
+from tabulate import tabulate
+from operator import itemgetter
 from langdetect import detect
 
 
