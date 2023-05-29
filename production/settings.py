@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 
-ALLOWED_HOSTS = ['0.0.0.0', '179.233.31.174', 'ephor.com.br']
+ALLOWED_HOSTS = ['192.168.0.10', 'ephor.com.br']
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG') == 'True'
@@ -34,6 +34,11 @@ PIX_CHAVE = os.getenv('PIX_CHAVE')
 PIX_CHAVE_PRIVADA = os.getenv('PIX_CHAVE_PRIVADA')
 PIX_URL_BASE = os.getenv('PIX_URL_BASE')
 
+# SSL Configuration
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Application definition
 

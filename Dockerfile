@@ -5,7 +5,8 @@ RUN apt-get update && \
     apt-get install -y python3 python3-pip default-libmysqlclient-dev python-numpy libicu-dev python3-tk && \
     apt-get install -y r-base && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* \
+    apt-get update
 
 RUN pip3 install mysqlclient
 

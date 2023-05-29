@@ -3,13 +3,22 @@ version: '3'
 services:
   web:
     build: .
-    ports:
-      - "8000:8000"
+    expose:
+      - 8080
+      - 8082
     command: gunicorn -c gunicorn.conf production.wsgi:application
     volumes:
       - .:/app
     depends_on:
       - db
+    environment:
+      - DB_HOST=db
+      - DB_NAME=mydatabasename
+      - DB_USER=mydatabaseuser
+      - DB_PASSWORD=mydatabasepassword
+      - USE_SSL=True
+      - VIRTUAL_HOST=ephor.com.br
+
   db:
     image: mysql:latest
     environment:
@@ -17,13 +26,15 @@ services:
       MYSQL_DATABASE: mydatabasename
       MYSQL_USER: mydatabaseuser
       MYSQL_PASSWORD: mydatabasepassword
+
   nginx:
     image: nginx:latest
     volumes:
       - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./ssl:/etc/nginx/ssl
     ports:
-      - "8080:80"
-      - "8081:443"
+      - "80:80"
+      - "443:443"
     depends_on:
       - web
 
