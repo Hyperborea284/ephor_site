@@ -1,29 +1,37 @@
-FROM debian:buster-slim
+FROM python:3
 
-# atualiza o cache do apt-get e instala os pacotes necessários
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip default-libmysqlclient-dev python-numpy libicu-dev python3-tk && \
-    apt-get install -y r-base && \
+    apt-get install -y default-libmysqlclient-dev libicu-dev python3-tk && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* \
-    apt-get update
+    rm -rf /var/lib/apt/lists/*
 
-RUN pip3 install mysqlclient
+RUN pip3 install --upgrade pip && pip3 install mysqlclient numpy
 
-# seta o diretório de trabalho como /app
+# Set the working directory to /app
 WORKDIR /app
 
-# Instala os pacotes R necessários
-RUN Rscript -e "install.packages(c('tm', 'SnowballC', 'wordcloud', 'RColorBrewer', 'syuzhet', 'ggplot2', 'magrittr', 'quanteda', 'quickPlot', 'rainette'), repos='http://cran.us.r-project.org')"
+# Install required R packages
+RUN apt-get update && apt-get install -y r-base && \
+    Rscript -e "install.packages(c('tm', 'SnowballC', 'wordcloud', 'RColorBrewer', 'syuzhet', 'ggplot2', 'magrittr', 'quanteda', 'quickPlot', 'rainette'), repos='http://cran.us.r-project.org')"
 
-# copia o arquivo requirements.txt para o diretório /app
+# Copy requirements.txt and .env to the /app directory
 COPY requirements.txt /app/
 COPY .env /app/
 
-# instala as dependências do projeto
-RUN pip3 install --upgrade pip && \
-    pip3 install --no-cache-dir -r requirements.txt
+# Install project dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-# copia o restante dos arquivos para o diretório /app
+# Copy the rest of the files to the /app directory
 COPY . /app/
 
+# Set the necessary environment variables
+ENV DJANGO_SETTINGS_MODULE=production.settings
+
+# Run Django migrations
+RUN python3 manage.py migrate
+
+# Expose port 8000 for Gunicorn
+EXPOSE 8000
+
+# Start Gunicorn server with Django
+CMD gunicorn --bind 0.0.0.0:8000 production.wsgi:application

@@ -5,7 +5,7 @@ from django.http import Http404
 
 from .forms import BlogPostModelForm
 from .models import BlogPost
-from nlp import *
+#from nlp import *
 
 
 @login_required
