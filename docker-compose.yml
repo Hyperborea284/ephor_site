@@ -16,7 +16,6 @@ services:
       - 1.0.0.1
     extra_hosts:
       - "ephor.com.br:127.0.0.1"
-      
 volumes:
   static_volume:
   media_volume:
