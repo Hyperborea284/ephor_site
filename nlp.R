@@ -9,7 +9,6 @@ library("syuzhet")
 library("ggplot2")
 library("magrittr")
 library('quanteda')
-library('quickPlot')
 library('rainette')
 
 text <- readLines(args[1])

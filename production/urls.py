@@ -4,7 +4,7 @@ from django.conf import settings
 
 from blog.views import (
     blog_post_create_view,
-    blog_post_create_view_scheduler,
+    #blog_post_create_view_scheduler,
     )
 
 from searches.views import search_view
@@ -13,14 +13,14 @@ from .views import *
 urlpatterns = [
     path('', home, name='home'),
     path('blog-new/', blog_post_create_view, name='blog-new'),
-    path('blog-new-scheduler/', blog_post_create_view_scheduler, name='blog-sched'),
     path('blog/', include('blog.urls')),
     path('search/', search_view, name='search_view'),
     path('about/', about, name='about'),
     path('contact/', contact, name='contact'),
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),
-    path('pagamentos/', blog_post_create_view, name='blog-new'),
+    #path('pagamentos/', blog_post_create_view, name='blog-new'),
+    #path('blog-new-scheduler/', blog_post_create_view_scheduler, name='blog-sched'),
 ]
 
 
