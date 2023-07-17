@@ -3,7 +3,7 @@ FROM python:3
 
 # Update packages and install necessary dependencies
 RUN apt-get update && \
-    apt-get install -y default-libmysqlclient-dev libicu-dev python3-tk r-base && \
+    apt-get install -y default-libmysqlclient-dev libicu-dev libharfbuzz-dev libfribidi-dev python3-tk r-base && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -13,12 +13,15 @@ RUN pip3 install --upgrade pip && pip3 install mysqlclient numpy
 # Set the working directory to /app
 WORKDIR /app
 
-# Set Locale
-ENV LANG C.UTF-8
-ENV LC_ALL C.UTF-8
+# Set the locale
+RUN apt-get clean && apt-get update && apt-get install -y locales
+RUN locale-gen pt_BR.UTF-8
+ENV LANG pt_BR.UTF-8
+ENV LANGUAGE pt_BR:pt
+ENV LC_ALL pt_BR.UTF-8
 
-# Install required R packages
-RUN Rscript -e "install.packages(c('textshaping', 'ragg', 'tm', 'SnowballC', 'wordcloud', 'RColorBrewer', 'syuzhet', 'ggplot2', 'magrittr', 'quanteda', 'rainette'), repos='http://cran.us.r-project.org')"
+# Install required R packages syuzhet
+RUN Rscript -e "install.packages(c('tidyverse', 'syuzhet', 'textshaping', 'ragg', 'tm', 'SnowballC', 'wordcloud', 'RColorBrewer', 'syuzhet', 'ggplot2', 'magrittr', 'quanteda', 'rainette'), repos='http://cran.us.r-project.org')"
 
 # Copy requirements.txt and .env to the /app directory
 COPY requirements.txt .env /app/
@@ -39,8 +42,11 @@ ENV DJANGO_SETTINGS_MODULE=production.settings
 
 # Run Django migrations
 RUN python3 manage.py collectstatic --noinput
-Run python3 manage.py makemigrations
-Run python3 manage.py migrate
+RUN python3 manage.py makemigrations
+RUN python3 manage.py migrate
+
+# Run nlp.py script to download necessary files
+RUN python3 nlp.py 'european' 'english' 13 2 5 'en' 2 3 5
 
 # Expose port 8000 for Gunicorn
 EXPOSE 8000
