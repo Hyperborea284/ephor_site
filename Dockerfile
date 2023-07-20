@@ -1,5 +1,5 @@
 # Use Python 3 as base image
-FROM python:3
+FROM python:3.10-bullseye
 
 # Update packages and install necessary dependencies
 RUN apt-get update && \
@@ -12,16 +12,6 @@ RUN pip3 install --upgrade pip && pip3 install mysqlclient numpy
 
 # Set the working directory to /app
 WORKDIR /app
-
-# Set the locale
-RUN apt-get clean && apt-get update && apt-get install -y locales
-RUN locale-gen pt_BR.UTF-8
-ENV LANG pt_BR.UTF-8
-ENV LANGUAGE pt_BR:pt
-ENV LC_ALL pt_BR.UTF-8
-
-# Install required R packages syuzhet
-RUN Rscript -e "install.packages(c('tidyverse', 'syuzhet', 'textshaping', 'ragg', 'tm', 'SnowballC', 'wordcloud', 'RColorBrewer', 'syuzhet', 'ggplot2', 'magrittr', 'quanteda', 'rainette'), repos='http://cran.us.r-project.org')"
 
 # Copy requirements.txt and .env to the /app directory
 COPY requirements.txt .env /app/
@@ -37,6 +27,12 @@ RUN python3 -m spacy download en_core_web_sm
 # Copy the rest of the files to the /app directory
 COPY . /app/
 
+# Install required R packages syuzhet
+RUN Rscript -e "install.packages(c('tidyverse', 'syuzhet', 'textshaping', 'ragg', 'tm', 'SnowballC', 'wordcloud', 'RColorBrewer', 'syuzhet', 'ggplot2', 'magrittr', 'quanteda', 'rainette'), repos='http://cran.us.r-project.org')"
+
+ENV TZ=America/Sao_Paulo
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # Set the necessary environment variables
 ENV DJANGO_SETTINGS_MODULE=production.settings
 
@@ -45,11 +41,11 @@ RUN python3 manage.py collectstatic --noinput
 RUN python3 manage.py makemigrations
 RUN python3 manage.py migrate
 
-# Run nlp.py script to download necessary files
-RUN python3 nlp.py 'european' 'english' 13 2 5 'en' 2 3 5
+# Run loads.py to generate TensorFlow files
+RUN python3 loads.py
 
-# Expose port 8000 for Gunicorn
+# Expose port 8000 for uwsgi
 EXPOSE 8000
 
-# Start Gunicorn server with Django
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "production.wsgi:application"]
+# Start uwsgi server with uwsgi
+CMD ["uwsgi", "--http", ":8000", "--module", "production.wsgi"]

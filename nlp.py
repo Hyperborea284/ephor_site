@@ -1,7 +1,6 @@
 from summarizer import Summarizer
 from spacy import displacy
 import spacy
-from goose3 import Goose
 from polyglot.detect import Detector
 import subprocess
 import os
@@ -9,6 +8,7 @@ import re
 import pandas as pd
 import string
 import nltk
+from nltk import *
 from nltk.tokenize import word_tokenize
 from tabulate import tabulate
 from operator import itemgetter
@@ -16,17 +16,7 @@ from langdetect import detect
 
 
 @staticmethod
-def url_extractor(url_article):
-    g = Goose()
-    article = g.extract(url_article)
-    article_lang = article.meta_lang
-    article_text = article.cleaned_text
-    return article, article_lang, article_text
-
-
-@staticmethod
 def entities(texto):
-
     lang_code = detect(texto)
     if lang_code == 'en':
         lang_code_short = 'english'
@@ -46,32 +36,20 @@ def entities(texto):
 
     return ent_list, lang_code, lang_code_short, lang_code_full
 
-
 @staticmethod
 def idiom(form, name):
     with open(f"{name}.txt", "w") as text_file:
         text_file.write(f"{form.cleaned_data['content']}\n\n")
         text_file.close()
-
         ent_list, lang_code, lang_code_short, lang_code_full = entities(form.cleaned_data['content'])
-
         barplot_size = form.cleaned_data["barplot_size"]
-        plot_min_freq = form.cleaned_data["plot_min_freq"]
-        reinert_segm = form.cleaned_data["reinert_segm"]
-        reinert_min_freq = form.cleaned_data["reinert_min_freq"]
-        reinert_k = form.cleaned_data["reinert_k"]
-        reinert_min_seg = form.cleaned_data["reinert_min_seg"]
-
-        subprocess.call (f"/usr/bin/Rscript nlp.R {name}.txt {lang_code_short} {barplot_size} {plot_min_freq} {reinert_segm} {lang_code} {reinert_min_freq} {reinert_k} {reinert_min_seg}", shell=True)
     os.remove(f"{name}.txt")
-
 
 @staticmethod
 def bert_sumarizar(form):
     sumarizador = Summarizer()
     resumo = sumarizador(form.cleaned_data['content'])
     return resumo
-
 
 @staticmethod
 def cleaner(text, lang_code_short):
@@ -97,10 +75,8 @@ def cleaner(text, lang_code_short):
 
     return output_tri, output_bi, filtered_word_1
 
-
 @staticmethod
 def proto(filtered_word_1):
-
     # constrói dicionário beta contendo o termo e a frequencia
     beta = {}
     for i in filtered_word_1:
@@ -124,9 +100,7 @@ def proto(filtered_word_1):
         alt_freq_bai_ord[i].insert(3, ome)
 
     bai_freq_alt_ord = sorted(sorted(alt_freq_bai_ord, key=lambda x: x[2][0], reverse=True), key = lambda x: x[1])
-
     alt_freq_alt_ord = sorted(sorted(alt_freq_bai_ord, key=lambda x: x[2][0], reverse=True), key = lambda x: x[1], reverse=True)
-    
     bai_freq_bai_ord = sorted(sorted(alt_freq_bai_ord, key=lambda x: x[2][0]), key = lambda x: x[1])
 
     return alt_freq_bai_ord, bai_freq_alt_ord, alt_freq_alt_ord, bai_freq_bai_ord

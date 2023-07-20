@@ -9,8 +9,8 @@ services:
       - static_volume:/app/static
       - media_volume:/app/media
     environment:
-      - DJANGO_SETTINGS_MODULE=production.settings
-    command: gunicorn --bind 0.0.0.0:8000 production.wsgi:application
+      - DJANGO_SETTINGS_MODULE=production.settings      
+    command: uwsgi --http :8000 --module production.wsgi
     dns:
       - 1.1.1.1
       - 1.0.0.1
