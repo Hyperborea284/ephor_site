@@ -3,7 +3,7 @@ FROM python:3.10-bullseye
 
 # Update packages and install necessary dependencies
 RUN apt-get update && \
-    apt-get install -y default-libmysqlclient-dev libicu-dev libharfbuzz-dev libfribidi-dev python3-tk r-base && \
+    apt-get install -y default-libmysqlclient-dev libicu-dev libharfbuzz-dev libfribidi-dev python3-tk r-base nano && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
