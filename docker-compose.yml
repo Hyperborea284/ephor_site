@@ -6,6 +6,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      - .:/app
       - static_volume:/app/static
       - media_volume:/app/media
     environment:
@@ -22,6 +23,7 @@ services:
         max-size: "200k"
         max-file: "10"
         labels: "production_logs"
+
 volumes:
   static_volume:
   media_volume:

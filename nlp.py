@@ -12,7 +12,9 @@ from nltk import *
 from nltk.tokenize import word_tokenize
 from tabulate import tabulate
 from operator import itemgetter
+
 from langdetect import detect
+#from ftlangdetect import detect
 
 import string
 from collections import Counter
@@ -23,7 +25,8 @@ import numpy as np
 import openai
 import speech_recognition as sr
 from dotenv import load_dotenv
-from ftlangdetect import detect
+
+
 from googletrans import Translator
 from gtts import gTTS
 from llama_index import Document, SimpleDirectoryReader, VectorStoreIndex, LLMPredictor, ServiceContext
@@ -681,32 +684,7 @@ class Func:
             reinert_min_seg = form.cleaned_data["reinert_min_seg"]
     
             subprocess.call (f"/usr/bin/Rscript nlp.R {name}.txt {lang_code_short} {barplot_size} {plot_min_freq} {reinert_segm} {lang_code} {reinert_min_freq} {reinert_k} {reinert_min_seg}", shell=True)
-        os.remove(f"{name}.txt")
-    
-    @staticmethod
-    def entities(texto):
-        lang_info = detect(texto)
-        lang_code = lang_info.get('lang')
-        lang_code_short = None
-        lang_code_full = None
-    
-        if lang_code == 'en':
-            lang_code_short = 'english'
-            lang_code_full = 'en_core_web_sm'
-        elif lang_code == 'pt':
-            lang_code_short = 'portuguese'
-            lang_code_full = 'pt_core_news_sm'
-        else:
-            raise ValueError(f"Unexpected language code: {lang_code}")
-    
-        ent_list = []
-        pln = spacy.load(lang_code_full)
-        documento = pln(texto)
-        for entidade in documento.ents:
-            ent_list.append([entidade.text, entidade.label_])
-    
-        return ent_list, lang_code, lang_code_short, lang_code_full
-
+        os.remove(f"{name}.txt")  
 
     @staticmethod
     def bert_sumarizar(form):

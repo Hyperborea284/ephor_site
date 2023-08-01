@@ -1,5 +1,10 @@
-# Use Python 3 as base image
+# Use Python 3.10 as base image
 FROM python:3.10-bullseye
+
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory to /app
+WORKDIR /app
 
 # Update packages and install necessary dependencies
 RUN apt-get update && \
@@ -10,9 +15,6 @@ RUN apt-get update && \
 # Upgrade pip and install Python packages
 RUN pip3 install --upgrade pip && pip3 install mysqlclient numpy
 
-# Set the working directory to /app
-WORKDIR /app
-
 # Copy requirements.txt and .env to the /app directory
 COPY requirements.txt .env /app/
 
@@ -20,9 +22,9 @@ COPY requirements.txt .env /app/
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 # Download Spacy language models
-RUN python3 -m spacy download pt_core_news_sm
-RUN python3 -m spacy download es_core_news_sm
-RUN python3 -m spacy download en_core_web_sm
+RUN python3 -m spacy download pt_core_news_sm;
+RUN python3 -m spacy download es_core_news_sm;
+RUN python3 -m spacy download en_core_web_sm;
 
 # Copy the rest of the files to the /app directory
 COPY . /app/
@@ -36,16 +38,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Set the necessary environment variables
 ENV DJANGO_SETTINGS_MODULE=production.settings
 
-# Run Django migrations
-RUN python3 manage.py collectstatic --noinput
-RUN python3 manage.py makemigrations
-RUN python3 manage.py migrate
-
-# Run loads.py to generate TensorFlow files
-RUN python3 loads.py
-
 # Expose port 8000 for uwsgi
 EXPOSE 8000
 
 # Start uwsgi server with uwsgi
-CMD ["uwsgi", "--http", ":8000", "--module", "production.wsgi"]
+CMD ["uwsgi", "--http", ":8000", "--module", "production.wsgi", "--enable-threads"]

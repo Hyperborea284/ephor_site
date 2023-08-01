@@ -21,13 +21,12 @@ def blog_post_list_view(request):
     context = {'object_list' : qs}
     return render(request, template_name, context)
 
-
 @login_required
 def blog_post_create_view(request):
 
     if not request.user.is_authenticated:
         return render(request,'not-a-user.html', {})
- 
+
     form = BlogPostModelForm(request.POST or None, request.FILES or None)
     if form.is_valid():
 
@@ -38,7 +37,10 @@ def blog_post_create_view(request):
         ent_list, lang_code, lang_code_short, lang_code_full = Func.entities(form.cleaned_data['content'].replace('\n', ' '))
 
         output_tri, output_bi, filtered_word_1 = Func.cleaner(form.cleaned_data['content'], lang_code_short)
-        alt_freq_bai_ord, bai_freq_alt_ord, alt_freq_alt_ord, bai_freq_bai_ord = Func.proto(filtered_word_1)        
+        
+        # Use calcula_ome and analise_prototipica instead of proto
+        palavras_ordenadas, ome = Func.calcula_ome(form.cleaned_data['content'])
+        alt_freq_bai_ord, bai_freq_alt_ord, alt_freq_alt_ord, bai_freq_bai_ord = Func.analise_prototipica(palavras_ordenadas, ome)
 
         obj = form.save(commit=False)
         obj.user = request.user  
@@ -60,6 +62,7 @@ def blog_post_create_view(request):
     template_name = 'form.html'
     context = {'form' : form}
     return render(request, template_name, context)
+
 
 
 @login_required
