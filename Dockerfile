@@ -10,7 +10,7 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y default-libmysqlclient-dev libicu-dev libharfbuzz-dev libfribidi-dev python3-tk r-base nano && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/*User
 
 # Upgrade pip and install Python packages
 RUN pip3 install --upgrade pip && pip3 install mysqlclient numpy
@@ -32,7 +32,7 @@ COPY . /app/
 # Install required R packages syuzhet
 RUN Rscript -e "install.packages(c('tidyverse', 'syuzhet', 'textshaping', 'ragg', 'tm', 'SnowballC', 'wordcloud', 'RColorBrewer', 'syuzhet', 'ggplot2', 'magrittr', 'quanteda', 'rainette'), repos='http://cran.us.r-project.org')"
 
-# Baixa os arquivos do nltk e tensorflow
+# Download files for nltk and tensorflow
 RUN python3 loads.py
 
 ENV TZ=America/Sao_Paulo
@@ -41,8 +41,8 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 # Set the necessary environment variables
 ENV DJANGO_SETTINGS_MODULE=production.settings
 
-# Expose port 8000 for uwsgi
-EXPOSE 8000
+# Expose port 8000 for uwsgi and 4747 for development
+EXPOSE 8000 4747
 
 # Start uwsgi server with uwsgi
 CMD ["uwsgi", "--http", ":8000", "--module", "production.wsgi", "--enable-threads"]
