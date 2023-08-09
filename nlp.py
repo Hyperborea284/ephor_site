@@ -408,30 +408,30 @@ class Func:
         texto = texto.replace('\n', ' ')
 
         # Detectar idioma do texto
-        lang_code = detect(text=text, low_memory=False)
+        lang_code = detect(text=text)
 
         # Identificar nome do idioma em sua forma reduzida e nome do modelo Spacy correspondente
-        if lang_code['lang'] == 'en':
+        if lang_code == 'en':
             lang_code_short = 'english'
             lang_code_full = 'en_core_web_sm'
-        elif lang_code['lang'] == 'pt':
+        elif lang_code == 'pt':
             lang_code_short = 'portuguese'
             lang_code_full = 'pt_core_news_sm'
         else:
-            lang_code_short = lang_code['lang']
+            lang_code_short = lang_code
             lang_code_full = ''
 
         # Extrair entidades nomeadas do texto usando modelo Spacy e adicioná-las à lista
         ent_list = []
-        pln = spacy.load(lang_code_full)
-        documento = pln(texto)
-        for entidade in documento.ents:
-            if [entidade.text, entidade.label_] not in ent_list:
-                ent_list.append([entidade.text, entidade.label_])
+        if lang_code_full:
+            pln = spacy.load(lang_code_full)
+            documento = pln(texto)
+            for entidade in documento.ents:
+                if [entidade.text, entidade.label_] not in ent_list:
+                    ent_list.append([entidade.text, entidade.label_])
 
         # Retornar lista de entidades nomeadas, código ISO do idioma, nome do idioma em sua forma reduzida
         # e nome do modelo do Spacy usado para processar o texto
-        lang_code = lang_code['lang']
         return list(ent_list), lang_code, lang_code_short, lang_code_full
 
     @staticmethod

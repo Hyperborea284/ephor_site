@@ -26,11 +26,11 @@ RUN python3 -m spacy download pt_core_news_sm;
 RUN python3 -m spacy download es_core_news_sm;
 RUN python3 -m spacy download en_core_web_sm;
 
-# Copy the rest of the files to the /app directory
-COPY . /app/
-
 # Install required R packages syuzhet
 RUN Rscript -e "install.packages(c('tidyverse', 'syuzhet', 'textshaping', 'ragg', 'tm', 'SnowballC', 'wordcloud', 'RColorBrewer', 'syuzhet', 'ggplot2', 'magrittr', 'quanteda', 'rainette'), repos='http://cran.us.r-project.org')"
+
+# Copy loads.py file to the /app directory
+COPY loads.py /app/
 
 # Download files for nltk and tensorflow
 RUN python3 loads.py
@@ -43,6 +43,9 @@ ENV DJANGO_SETTINGS_MODULE=production.settings
 
 # Expose port 8000 for uwsgi and 4747 for development
 EXPOSE 8000 4747
+
+# Copy the rest of the files to the /app directory
+COPY . /app/
 
 # Start uwsgi server with uwsgi
 CMD ["uwsgi", "--http", ":8000", "--module", "production.wsgi", "--enable-threads"]
