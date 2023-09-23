@@ -22,7 +22,7 @@ langchain>=0.0.218
 langdetect==1.0.9
 langid>=1.1.6
 llama-index==0.6.38.post1
-lxml~=4.8.0
+lxml==4.9.3 
 matplotlib>=3.4.3
 mysqlclient==2.1.0
 nltk==3.6.5

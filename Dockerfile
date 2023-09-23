@@ -47,5 +47,10 @@ EXPOSE 8000 4747
 # Copy the rest of the files to the /app directory
 COPY . /app/
 
+# Run makemigrations and migrate
+RUN python3 manage.py makemigrations
+RUN python3 manage.py migrate
+RUN python3 manage.py collectstatic --noinput
+
 # Start uwsgi server with uwsgi
 CMD ["uwsgi", "--http", ":8000", "--module", "production.wsgi", "--enable-threads"]
