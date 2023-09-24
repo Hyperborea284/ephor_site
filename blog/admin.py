@@ -1,7 +1,8 @@
 from django.contrib import admin
+from .models import UserAccessLog
 
-# Register your models here.
+class UserAccessLogAdmin(admin.ModelAdmin):
+    list_display = ('ip_address', 'latitude', 'longitude', 'user_agent')
+    search_fields = ('ip_address', 'user_agent')
 
-from .models import BlogPost
-
-admin.site.register(BlogPost)
+admin.site.register(UserAccessLog, UserAccessLogAdmin)

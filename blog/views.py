@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.shortcuts import render, get_object_or_404, HttpResponseRedirect
 from django.http import Http404
+from django.http import JsonResponse
 
 from .forms import BlogPostModelForm
 from .models import BlogPost
@@ -137,7 +138,20 @@ def blog_post_create_view_scheduler(request):
     return render(request, template_name, context)
 
 
+def salvar_geolocalizacao(request):
+    if request.method == 'POST':
+        data = request.POST
+        latitude = data.get('latitude')
+        longitude = data.get('longitude')
 
+        # Salvando a geolocalização no banco de dados
+        user_access_log = UserAccessLog.objects.latest('id')  # Supondo que você quer associar à última entrada do log
+        user_access_log.latitude = latitude
+        user_access_log.longitude = longitude
+        user_access_log.save()
 
+        return JsonResponse({'message': 'Geolocalização salva com sucesso!'})
+
+    return JsonResponse({'message': 'Método inválido.'}, status=400)
 
 

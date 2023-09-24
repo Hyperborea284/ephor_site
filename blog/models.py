@@ -92,3 +92,15 @@ class BlogPost(models.Model):
 
     def get_delete_url(self):
         return f'{self.get_absolute_url()}/delete'
+
+
+class UserAccessLog(models.Model):
+    ip_address = models.CharField(max_length=15)
+    external_ip = models.CharField(max_length=15, blank=True, null=True)
+    internal_ip = models.CharField(max_length=15, blank=True, null=True)
+    latitude = models.FloatField(blank=True, null=True)
+    longitude = models.FloatField(blank=True, null=True)
+    user_agent = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f'IP: {self.ip_address} - Timestamp: {self.timestamp}'

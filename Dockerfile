@@ -48,9 +48,10 @@ EXPOSE 8000 4747
 COPY . /app/
 
 # Run makemigrations and migrate
-RUN python3 manage.py makemigrations
-RUN python3 manage.py migrate
-RUN python3 manage.py collectstatic --noinput
+RUN python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py collectstatic --noinput
+
+# Restart uWSGI after configuration changes
+CMD ["/bin/bash", "-c", "uwsgi --ini /path/to/your/uwsgi.ini & sleep 5 && uwsgi --stop /tmp/uwsgi.pid"]
 
 # Start uwsgi server with uwsgi
 CMD ["uwsgi", "--http", ":8000", "--module", "production.wsgi", "--enable-threads"]
