@@ -93,14 +93,15 @@ class BlogPost(models.Model):
     def get_delete_url(self):
         return f'{self.get_absolute_url()}/delete'
 
-
 class UserAccessLog(models.Model):
     ip_address = models.CharField(max_length=15)
-    external_ip = models.CharField(max_length=15, blank=True, null=True)
-    internal_ip = models.CharField(max_length=15, blank=True, null=True)
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
     user_agent = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
-        return f'IP: {self.ip_address} - Timestamp: {self.timestamp}'
+        # Excluir entradas com IP '127.0.0.1' e user agent 'Nextcloud Server Crawler'
+        if self.ip_address == '127.0.0.1' and self.user_agent == 'Nextcloud Server Crawler':
+            return 'Entry ignored: IP 127.0.0.1 with user agent Nextcloud Server Crawler'
+        else:
+            return f'Latitude: {self.latitude}, Longitude: {self.longitude}, IP: {self.ip_address}, User Agent: {self.user_agent}'

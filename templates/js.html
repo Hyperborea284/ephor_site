@@ -1,62 +1,47 @@
 {% load static %}
 
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<!-- jQuery Easing -->
-<script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
-<!-- Bootstrap -->
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<!-- Waypoints -->
-<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-<!-- Stellar -->
-<script src="{% static 'js/jquery.stellar.min.js' %}"></script>
-<!-- MAIN JS -->
-<script src="{% static 'js/main.js' %}"></script>
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+</head>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<body>
+  <!-- Seu conteúdo HTML aqui -->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+  <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
+  <script src="https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700" type="text/css"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script>
-
-<link href='https://fonts.googleapis.com/css?family=Work+Sans:400,300,600,400italic,700' rel='stylesheet' type='text/css'>
-
-<script>
-    // Função para obter a geolocalização
+  <script>
     function getLocation() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(showPosition);
-        } else {
-            console.log("Geolocalização não é suportada por este navegador.");
-        }
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+      } else {
+        console.log("Geolocalização não é suportada por este navegador.");
+      }
     }
 
     function showPosition(position) {
-        // Salvando a geolocalização no banco de dados
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
+      const latitude = position.coords.latitude;
+      const longitude = position.coords.longitude;
 
-        // Enviar as informações para o servidor (por exemplo, usando uma requisição AJAX)
-        // Exemplo fictício de como enviar usando fetch:
-        fetch('/salvar_geolocalizacao/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                latitude: latitude,
-                longitude: longitude
-            })
-        })
+      const apiUrl = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`;
+
+      fetch(apiUrl)
         .then(response => response.json())
-        .then(data => console.log("Geolocalização salva:", data))
-        .catch(error => console.error("Erro ao salvar geolocalização:", error));
-
-        // Restante do código para obter IP interno e externo, e user agent
-        // ...
-
-        // Chamar a função para obter a geolocalização
-        getLocation();
+        .then(data => {
+          const location = data.display_name;
+          console.log('Location:', location);
+        })
+        .catch(error => console.error('Erro ao obter informações de geolocalização:', error));
     }
-</script>
+
+    getLocation();  // Chamar a função para obter a geolocalização
+  </script>
+</body>
